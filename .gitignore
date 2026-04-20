@@ -1,0 +1,23 @@
+# Java related files
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.java~
+# Logs and other generated files
+*.log
+hs_err_pid*
+
+# Maven specific
+/log/
+/target/
+/release/
+/output/
+
+# Go specific files
+*.exe
+*.exe~
+*.test
+*.exeedit
+/vendor/
