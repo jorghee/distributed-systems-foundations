@@ -45,10 +45,13 @@
       </tr>
       <tr>
         <td colspan="6" style="padding: 10px;"> Mamani Huarsaya, Jorge Luis</td>
-        <td colspan="6" style="padding: 10px;"> Mollo Chuquicaña, Dolly Yadhira</td>
-        <td colspan="6" style="padding: 10px;"> Orbegozo Lescano, Joshua Gilbert</td>
       </tr>
+      <tr>
+        <td colspan="6" style="padding: 10px;"> Mollo Chuquicaña, Dolly Yadhira</td>
+      <tr>
+      <tr>
+        <td colspan="6" style="padding: 10px;"> Orbegozo Lescano, Joshua Gilbert</td>
+      <tr>
     </tbody>
   </table>
 </div>
-
