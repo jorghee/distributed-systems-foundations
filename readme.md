@@ -1,6 +1,6 @@
 # <samp> Distributed Systems <samp>
 
-Proffesor: *Maribel Molina Barriga* 
+Professor: *Maribel Molina Barriga* 
 
 ### References
 
