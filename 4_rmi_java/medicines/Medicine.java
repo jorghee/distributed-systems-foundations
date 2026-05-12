@@ -1,4 +1,4 @@
-package medicine;
+package medicines;
 
 import java.rmi.server.UnicastRemoteObject;
 
