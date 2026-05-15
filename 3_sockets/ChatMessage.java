@@ -7,27 +7,28 @@ import java.io.*;
 
 public class ChatMessage implements Serializable {
 
-    // Types of messages
-    static final int WHOISIN = 0;
-    static final int MESSAGE = 1;
-    static final int LOGOUT = 2;
+  // Types of messages
+  static final int WHOISIN = 0;
+  static final int MESSAGE = 1;
+  static final int LOGOUT = 2;
 
-    private int type;
-    private String message;
+  private int type;
+  private String message;
 
-    // Constructor
-    ChatMessage(int type, String message) {
-        this.type = type;
-        this.message = message;
-    }
+  // Constructor
+  ChatMessage(int type, String message) {
+    this.type = type;
+    this.message = message;
+  }
 
-    // Getter for type
-    int getType() {
-        return type;
-    }
+  // Getter for type
+  int getType() {
+    return type;
+  }
 
-    // Getter for message
-    String getMessage() {
-        return message;
-    }
+  // Getter for message
+  String getMessage() {
+    return message;
+  }
 }
+
