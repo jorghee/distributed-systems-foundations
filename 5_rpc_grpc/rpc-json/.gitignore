@@ -1,0 +1,14 @@
+# Eclipse configuration files
+.project
+.classpath
+.settings/
+
+# Maven build files
+target/
+
+# Logs and other artifacts
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
