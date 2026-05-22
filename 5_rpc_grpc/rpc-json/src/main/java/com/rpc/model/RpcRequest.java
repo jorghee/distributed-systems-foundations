@@ -8,6 +8,8 @@ public class RpcRequest {
   private List<Double> params;
   private String id;
 
+  public RpcRequest() {}
+
   public RpcRequest(String method, List<Double> params, String id) {
     this.method = method;
     this.params = params;
