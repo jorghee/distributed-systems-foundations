@@ -10,9 +10,9 @@ public class RpcError {
   }
 
   // JSON-RPC Estandar
-  public static final RpcError METHOD_NOT_FOUND = new RpcError(-32601, "Method not found");
-  public static final RpcError INVALID_PARAMS = new RpcError(-32602, "Invalid params");
-  public static final RpcError INTERNAL_ERROR = new RpcError(-32603, "Internal error");
+  public static final RpcError METHOD_NOT_FOUND = new RpcError(-32601, "Método no encontrado");
+  public static final RpcError INVALID_PARAMS = new RpcError(-32602, "Parametros inválidos");
+  public static final RpcError INTERNAL_ERROR = new RpcError(-32603, "Error interno");
 
   public int getCode() {
     return code;

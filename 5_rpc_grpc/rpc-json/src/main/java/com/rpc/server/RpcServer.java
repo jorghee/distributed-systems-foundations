@@ -21,12 +21,12 @@ public class RpcServer {
   private static final RpcDispatcher dispatcher = new RpcDispatcher(new CalculatorService());
 
   public static void main(String[] args) {
-    System.out.println("Starting RPC Server on port " + PORT + "...");
+    System.out.println("Comenzando el servidor RPC en el puerto " + PORT + "...");
 
     try (ServerSocket serverSocket = new ServerSocket(PORT)) {
       while (true) {
         Socket clientSocket = serverSocket.accept();
-        System.out.println("Client connected: " + clientSocket.getInetAddress());
+        System.out.println("Cliente conectado: " + clientSocket.getInetAddress());
 
         // Despacha el cliente a un hilo para manejar conexiones concurrentes
         threadPool.submit(() -> handleClient(clientSocket));
@@ -44,7 +44,7 @@ public class RpcServer {
       String rawJson;
       // Lee línea por línea (cada línea es un Request completo)
       while ((rawJson = in.readLine()) != null) {
-        System.out.println("Server Received: " + rawJson);
+        System.out.println("Servidor recibió: " + rawJson);
 
         // 1. Deserializar
         RpcRequest request = mapper.readValue(rawJson, RpcRequest.class);
@@ -55,10 +55,10 @@ public class RpcServer {
         // 3. Serializar y responder
         String jsonResponse = mapper.writeValueAsString(response);
         out.println(jsonResponse);
-        System.out.println("Server Sent: " + jsonResponse);
+        System.out.println("Servidor envió: " + jsonResponse);
       }
     } catch (Exception e) {
-      System.err.println("Connection error: " + e.getMessage());
+      System.err.println("Error de conexión: " + e.getMessage());
     }
   }
 }

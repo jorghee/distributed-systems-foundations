@@ -20,7 +20,7 @@ public class RpcClient {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
       socket.setSoTimeout(5000); // Timeout robusto
-      System.out.println("Connected to RPC Server.");
+      System.out.println("Conectado al servidor RPC.");
 
       // Stub / Llamadas de ejemplo
       callRemoteProcedure(out, in, "multiply", 4.0, 5.0);
@@ -47,7 +47,7 @@ public class RpcClient {
 
     // Enviar por TCP (agregando salto de línea para el framing)
     out.println(jsonRequest);
-    System.out.println("\n[Client] Request Sent: " + jsonRequest);
+    System.out.println("\n[Client] Solicitud enviada: " + jsonRequest);
 
     // Leer respuesta TCP
     String jsonResponse = in.readLine();
@@ -57,9 +57,9 @@ public class RpcClient {
 
     // Validar y mostrar
     if (response.getError() != null) {
-      System.err.println("[Client] Error from Server: " + response.getError().getMessage());
+      System.err.println("[Client] Error de servidor: " + response.getError().getMessage());
     } else {
-      System.out.println("[Client] Result: " + response.getResult());
+      System.out.println("[Client] Resultado: " + response.getResult());
     }
   }
 }
