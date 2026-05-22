@@ -37,7 +37,6 @@ public class RpcServer {
   }
 
   private static void handleClient(Socket socket) {
-    // Try-with-resources asegura el cierre de streams y del socket
     try (socket;
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
@@ -46,13 +45,13 @@ public class RpcServer {
       while ((rawJson = in.readLine()) != null) {
         System.out.println("Servidor recibió: " + rawJson);
 
-        // 1. Deserializar
+        // Deserializar
         RpcRequest request = mapper.readValue(rawJson, RpcRequest.class);
 
-        // 2. Despachar (Ejecutar RPC)
+        // Despachar (Ejecutar RPC)
         RpcResponse response = dispatcher.dispatch(request);
 
-        // 3. Serializar y responder
+        // Serializar y responder
         String jsonResponse = mapper.writeValueAsString(response);
         out.println(jsonResponse);
         System.out.println("Servidor envió: " + jsonResponse);
