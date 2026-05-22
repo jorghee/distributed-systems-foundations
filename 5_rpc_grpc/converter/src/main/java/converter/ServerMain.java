@@ -6,7 +6,6 @@ import io.grpc.ServerBuilder;
 public class ServerMain {
 
   public static void main(String[] args) throws Exception {
-
     Server server = ServerBuilder.forPort(50051).addService(new ConverterServiceImpl()).build();
 
     server.start();
