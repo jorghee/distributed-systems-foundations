@@ -38,6 +38,10 @@ public class RpcClient {
 
   private static void callRemoteProcedure(
       PrintWriter out, BufferedReader in, String method, Double... params) throws Exception {
+
+    long memBefore = MetricsRecorder.usedMemoryBytes();
+    long startTime = System.nanoTime();
+
     // Construir Request
     String requestId = UUID.randomUUID().toString();
     RpcRequest request = new RpcRequest(method, Arrays.asList(params), requestId);
@@ -54,6 +58,8 @@ public class RpcClient {
 
     // Deserializar
     RpcResponse response = mapper.readValue(jsonResponse, RpcResponse.class);
+
+    MetricsRecorder.printMetrics(method, startTime, memBefore);
 
     // Validar y mostrar
     if (response.getError() != null) {

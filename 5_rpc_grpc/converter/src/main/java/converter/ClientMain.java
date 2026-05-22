@@ -65,7 +65,13 @@ public class ClientMain {
 
       double valor = sc.nextDouble();
       ConvertRequest request = ConvertRequest.newBuilder().setType(tipo).setValue(valor).build();
+
+      long memBefore = MetricsRecorder.usedMemoryBytes();
+      long startTime = System.nanoTime();
+
       ConvertResponse response = stub.convert(request);
+
+      MetricsRecorder.printMetrics(tipo, startTime, memBefore);
 
       System.out.println("Resultado: " + response.getResult());
       System.out.println("Mensaje: " + response.getMessage());
