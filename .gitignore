@@ -21,3 +21,6 @@ hs_err_pid*
 *.test
 *.exeedit
 /vendor/
+
+# Directory workflow
+/book/
