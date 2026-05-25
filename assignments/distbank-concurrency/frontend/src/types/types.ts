@@ -70,3 +70,32 @@ export interface ApiError {
   timestamp: string;
 }
 
+export interface WsEventPayload {
+    eventType: 'TX_STARTED' | 'LOCK_ACQUIRED' | 'TX_COMMITTED' | 'TX_FAILED' | 'DEADLOCK' | 'LOAD_STARTED' | 'LOAD_COMPLETED';
+    referenceId?: string;
+    transactionType?: string;
+    accountNumber?: string;
+    amount?: number;
+    thread?: string;
+    timestamp: string;
+    // Campos específicos de algunos eventos
+    lockWaitMillis?: number;
+    hadContention?: boolean;
+    durationMillis?: number;
+    errorMessage?: string;
+    errorType?: string;
+    operation?: string;
+}
+
+export interface TransactionLiveState {
+    referenceId: string;
+    thread: string;
+    type: string;
+    amount: number;
+    status: 'WAITING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+    timestamp: Date;
+    lockWaitMillis?: number;
+    durationMillis?: number;
+    errorMessage?: string;
+    hadContention?: boolean;
+}

@@ -6,7 +6,8 @@ import AccountList from './components/AccountList';
 import LedgerView from './components/LedgerView';
 import SimulationControl from './components/SimulationControl';
 import SimulationResults from './components/SimulationResults';
-
+import { useConcurrency } from './hooks/useConcurrency';
+import LiveConcurrencyView from './components/LiveConcurrencyView';
 
 function App() {
     const [accounts, setAccounts] = useState<AccountSnapshot[]>([]);
@@ -14,6 +15,7 @@ function App() {
     const [ledger, setLedger] = useState<LedgerEntryDto[]>([]);
     const [simulationResult, setSimulationResult] = useState<ConcurrentLoadResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { liveTransactions, isConnected } = useConcurrency();
 
     const loadAccounts = async () => {
         try {
@@ -57,40 +59,45 @@ function App() {
     };
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen font-sans">
-            <header className="bg-gray-800 p-4 shadow-md">
-                <h1 className="text-3xl font-bold text-purple-400 text-center">Panel de Concurrencia DistBank</h1>
+        <div className="bg-gray-900 text-white min-h-screen font-sans pb-10">
+            <header className="bg-gray-800 p-4 shadow-md flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-purple-400">Panel de Control</h1>
+                <div className="flex items-center gap-2 text-sm font-medium">
+                    Estado Servidor:
+                    <span className={`flex h-3 w-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                    {isConnected ? 'En línea' : 'Desconectado'}
+                </div>
             </header>
 
             {error && <div className="bg-red-500 text-white p-4 m-4 rounded-md text-center">{error}</div>}
 
             <main className="p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                    <div className="lg:col-span-3">
-                        <Card title="Cuentas">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                    {/* Controles y configuración en la parte superior */}
+                    <div className="lg:col-span-1">
+                        <Card title="Cuentas" className="mb-6">
                            <AccountList accounts={accounts} onAccountSelect={handleAccountSelect} />
                         </Card>
-                    </div>
-
-                    <div className="lg:col-span-2">
-                         <Card title={`Libro Mayor de la cuenta ${selectedAccount || '...'}`}>
+                        <Card title="Control de Carga" className="mb-6">
+                           <SimulationControl selectedAccount={selectedAccount} onSimulate={handleSimulate} />
+                        </Card>
+                        <Card title={`Libro Mayor (Ledger) - ${selectedAccount || '...'}`} className="mb-6">
                            <LedgerView ledger={ledger} />
                         </Card>
                     </div>
 
-                    <div>
-                        <Card title="Simulación de Concurrencia">
-                           <SimulationControl selectedAccount={selectedAccount} onSimulate={handleSimulate} />
-                        </Card>
-                    </div>
-
-                    <div className="lg:col-span-3">
-                        <Card title="Resultados de la Simulación">
+                    <div className="lg:col-span-3 flex flex-col gap-6">
+                        <Card title="Resumen Global (Resultados Rest)">
                            <SimulationResults results={simulationResult} />
+                        </Card>
+                        <Card title="Logs de Hilos" className="border-t-4 border-purple-500">
+                            <LiveConcurrencyView transactions={liveTransactions} isConnected={isConnected} />
                         </Card>
                     </div>
                 </div>
+
+
+
             </main>
         </div>
     );
