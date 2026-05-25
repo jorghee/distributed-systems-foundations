@@ -75,11 +75,11 @@ function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
                     {/* Controles y configuración en la parte superior */}
                     <div className="lg:col-span-1">
-                        <Card title="Cuentas" className="mb-6">
-                           <AccountList accounts={accounts} onAccountSelect={handleAccountSelect} />
-                        </Card>
                         <Card title="Control de Carga" className="mb-6">
                            <SimulationControl selectedAccount={selectedAccount} onSimulate={handleSimulate} />
+                        </Card>
+                        <Card title="Cuentas" className="mb-6">
+                           <AccountList accounts={accounts} onAccountSelect={handleAccountSelect} />
                         </Card>
                         <Card title={`Libro Mayor (Ledger) - ${selectedAccount || '...'}`} className="mb-6">
                            <LedgerView ledger={ledger} />
