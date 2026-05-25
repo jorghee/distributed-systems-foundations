@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS ledger_entry;
+DROP TABLE IF EXISTS account;
+
+CREATE TABLE account (
+  id BIGSERIAL PRIMARY KEY,
+  account_number VARCHAR(20) UNIQUE NOT NULL,
+  balance DECIMAL(15, 2) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ledger_entry (
+  id BIGSERIAL PRIMARY KEY,
+  account_id BIGINT NOT NULL,
+  amount DECIMAL(15, 2) NOT NULL,
+  transaction_type VARCHAR(20) NOT NULL,
+  reference_id VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_account FOREIGN KEY (account_id) REFERENCES account(id)
+);

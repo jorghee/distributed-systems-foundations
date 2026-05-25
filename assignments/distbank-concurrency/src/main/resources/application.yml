@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: distbank-concurrency
+  sql:
+    init:
+      mode: always # Ejecuta schema.sql y data.sql al arrancar
+  jpa:
+    hibernate:
+      ddl-auto: validate # Hibernate no creará tablas, solo validará contra nuestro schema.sql
+    show-sql: false # Lo mantendremos en false para no saturar los logs, controlaremos la visibilidad luego
