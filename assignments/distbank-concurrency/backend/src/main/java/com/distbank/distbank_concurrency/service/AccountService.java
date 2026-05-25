@@ -84,6 +84,7 @@ public class AccountService {
               status -> {
                 // Adquirir lock exclusivo (puede bloquear aquí si hay contención)
                 var lockResult = accountRepository.findByAccountNumberForUpdate(accountNumber);
+                simulateProcessingDelay(1500);
 
                 log.info(
                     "[TX] LOCK ACQUIRED: account={} wait={}ms contention={}",
@@ -177,6 +178,7 @@ public class AccountService {
           transactionTemplate.execute(
               status -> {
                 var lockResult = accountRepository.findByAccountNumberForUpdate(accountNumber);
+                simulateProcessingDelay(1500);
 
                 log.info(
                     "[TX] LOCK ACQUIRED: account={} wait={}ms contention={}",
@@ -448,5 +450,13 @@ public class AccountService {
         e.getTransactionType(),
         e.getReferenceId(),
         e.getCreatedAt());
+  }
+
+  private void simulateProcessingDelay(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
   }
 }
