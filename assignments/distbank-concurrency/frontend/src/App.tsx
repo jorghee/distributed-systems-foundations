@@ -59,7 +59,7 @@ function App() {
     return (
         <div className="bg-gray-900 text-white min-h-screen font-sans">
             <header className="bg-gray-800 p-4 shadow-md">
-                <h1 className="text-3xl font-bold text-purple-400 text-center">DistBank Concurrency Dashboard</h1>
+                <h1 className="text-3xl font-bold text-purple-400 text-center">Panel de Concurrencia DistBank</h1>
             </header>
 
             {error && <div className="bg-red-500 text-white p-4 m-4 rounded-md text-center">{error}</div>}
@@ -68,25 +68,25 @@ function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                     <div className="lg:col-span-3">
-                        <Card title="Accounts">
+                        <Card title="Cuentas">
                            <AccountList accounts={accounts} onAccountSelect={handleAccountSelect} />
                         </Card>
                     </div>
 
                     <div className="lg:col-span-2">
-                         <Card title={`Ledger for ${selectedAccount || '...'}`}>
+                         <Card title={`Libro Mayor de la cuenta ${selectedAccount || '...'}`}>
                            <LedgerView ledger={ledger} />
                         </Card>
                     </div>
 
                     <div>
-                        <Card title="Concurrency Simulation">
+                        <Card title="Simulación de Concurrencia">
                            <SimulationControl selectedAccount={selectedAccount} onSimulate={handleSimulate} />
                         </Card>
                     </div>
 
                     <div className="lg:col-span-3">
-                        <Card title="Simulation Results">
+                        <Card title="Resultados de la Simulación">
                            <SimulationResults results={simulationResult} />
                         </Card>
                     </div>

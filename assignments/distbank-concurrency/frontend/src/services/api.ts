@@ -14,7 +14,7 @@ async function fetchApi<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, options);
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'An unknown error occurred');
+    throw new Error(errorData.message || 'Ocurrió un error desconocido');
   }
   return response.json();
 }

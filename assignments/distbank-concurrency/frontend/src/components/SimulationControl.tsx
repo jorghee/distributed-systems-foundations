@@ -14,27 +14,26 @@ const SimulationControl: React.FC<{ selectedAccount: string | null; onSimulate: 
     return (
         <div className="space-y-4">
             <div>
-                <label className="block text-sm font-medium text-gray-300">Threads</label>
+                <label className="block text-sm font-medium text-gray-300">Número de Hilos</label>
                 <input type="number" value={threads} onChange={e => setThreads(parseInt(e.target.value))} className="w-full bg-gray-700 text-white p-2 rounded-md mt-1" />
             </div>
             <div>
-                <label className="block text-sm font-medium text-gray-300">Amount per Thread</label>
+                <label className="block text-sm font-medium text-gray-300">Monto por Hilo</label>
                 <input type="number" value={amount} onChange={e => setAmount(parseInt(e.target.value))} className="w-full bg-gray-700 text-white p-2 rounded-md mt-1" />
             </div>
             <div>
-                 <label className="block text-sm font-medium text-gray-300">Operation Type</label>
+                 <label className="block text-sm font-medium text-gray-300">Tipo de Operación</label>
                 <select value={type} onChange={e => setType(e.target.value as 'DEPOSIT' | 'WITHDRAWAL')} className="w-full bg-gray-700 text-white p-2 rounded-md mt-1">
-                    <option value="DEPOSIT">Deposit</option>
-                    <option value="WITHDRAWAL">Withdrawal</option>
+                    <option value="DEPOSIT">Depósito</option>
+                    <option value="WITHDRAWAL">Retiro</option>
                 </select>
             </div>
             <button onClick={handleSimulate} disabled={!selectedAccount} className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-500">
-                Run Simulation
+                Ejecutar Simulación
             </button>
-            {!selectedAccount && <p className="text-xs text-yellow-400 text-center mt-2">Please select an account first.</p>}
+            {!selectedAccount && <p className="text-xs text-yellow-400 text-center mt-2">Por favor, selecciona una cuenta primero.</p>}
         </div>
     );
 };
 
 export default SimulationControl;
-
