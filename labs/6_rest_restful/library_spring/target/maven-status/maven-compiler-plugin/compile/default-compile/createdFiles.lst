@@ -1,0 +1,6 @@
+com\biblioteca\model\Libro.class
+com\biblioteca\config\DataLoader.class
+com\biblioteca\repository\LibroRepository.class
+com\biblioteca\service\LibroService.class
+com\biblioteca\BibliotecaApplication.class
+com\biblioteca\controller\LibroController.class
