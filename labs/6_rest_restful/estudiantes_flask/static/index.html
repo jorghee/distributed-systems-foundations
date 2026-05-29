@@ -5,87 +5,216 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudiantes</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background: #f4f6f8;
-            color: #222;
+            min-height: 100vh;
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                linear-gradient(135deg, rgba(11, 19, 32, 0.86), rgba(56, 23, 42, 0.76)),
+                url("/static/fondo.jpg") center / cover fixed;
+            color: #241a1f;
+        }
+
+        .contenedor {
+            width: min(1100px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .encabezado {
+            text-align: center;
+            margin-bottom: 26px;
+            color: #fff8f0;
+            text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
-            margin-bottom: 20px;
+            margin: 0 0 8px;
+            font-size: clamp(28px, 4vw, 42px);
+        }
+
+        .subtitulo {
+            margin: 0;
+            color: #ffd7bd;
+        }
+
+        .panel-formulario {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
         }
 
         form {
-            background: white;
-            padding: 18px;
-            max-width: 520px;
-            border: 1px solid #ddd;
-            margin-bottom: 25px;
+            width: min(100%, 560px);
+            background: rgba(255, 250, 246, 0.96);
+            padding: 26px;
+            border: 1px solid rgba(255, 186, 122, 0.38);
+            border-radius: 8px;
+            box-shadow: 0 18px 42px rgba(8, 14, 24, 0.35);
+            backdrop-filter: blur(8px);
+        }
+
+        .campo {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #452331;
         }
 
         input {
             width: 100%;
-            padding: 9px;
-            margin: 7px 0;
-            box-sizing: border-box;
+            min-height: 44px;
+            padding: 10px 12px;
+            border: 1px solid #e2b28b;
+            border-radius: 6px;
+            font: inherit;
+            color: #2c1a21;
+            background: #fffaf6;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff7a45;
+            box-shadow: 0 0 0 3px rgba(255, 122, 69, 0.22);
+        }
+
+        input::placeholder {
+            color: #9b7564;
+        }
+
+        .acciones-formulario {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
         }
 
         button {
-            padding: 9px 13px;
+            min-height: 40px;
+            padding: 10px 15px;
             border: 0;
-            background: #2563eb;
-            color: white;
+            border-radius: 6px;
+            background: #e95645;
+            color: #ffffff;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 8px;
+            transition: background 0.18s ease, transform 0.18s ease;
+        }
+
+        button:hover {
+            background: #c93f35;
+            transform: translateY(-1px);
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+            background: rgba(255, 250, 246, 0.95);
+            border: 1px solid rgba(255, 186, 122, 0.34);
+            border-radius: 8px;
+            box-shadow: 0 16px 36px rgba(8, 14, 24, 0.3);
+            backdrop-filter: blur(8px);
         }
 
         table {
             width: 100%;
+            min-width: 720px;
             border-collapse: collapse;
-            background: white;
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
+            padding: 14px 16px;
             text-align: left;
+            border-bottom: 1px solid #f0d7c4;
         }
 
         th {
-            background: #e5e7eb;
+            background: #3d2330;
+            color: #ffe3ca;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        td button {
+            min-height: 34px;
+            padding: 8px 11px;
+            margin-right: 6px;
+            font-size: 13px;
         }
 
         .btn-eliminar {
-            background: #dc2626;
+            background: #9f2633;
+        }
+
+        .btn-eliminar:hover {
+            background: #7f1d2d;
         }
     </style>
 </head>
 <body>
-    <h1>Registro de estudiantes</h1>
+    <main class="contenedor">
+        <header class="encabezado">
+            <h1>Registro de estudiantes</h1>
+        </header>
 
-    <form id="formulario">
-        <input type="hidden" id="id">
-        <input type="text" id="codigo" placeholder="Codigo" required>
-        <input type="text" id="nombre" placeholder="Nombre" required>
-        <input type="email" id="correo" placeholder="Correo">
-        <input type="text" id="carrera" placeholder="Carrera">
-        <button type="submit">Guardar</button>
-    </form>
+        <section class="panel-formulario" aria-label="Formulario de estudiante">
+            <form id="formulario">
+                <input type="hidden" id="id">
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Codigo</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Carrera</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="tabla"></tbody>
-    </table>
+                <div class="campo">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" id="codigo" placeholder="Ej. 20240001" required minlength="6" pattern="[0-9]+" title="Ingrese solo numeros, minimo 6 digitos">
+                </div>
+
+                <div class="campo">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" placeholder="Nombre completo" required minlength="3">
+                </div>
+
+                <div class="campo">
+                    <label for="correo">Correo</label>
+                    <input type="email" id="correo" placeholder="nombre@unsa.edu.pe" required>
+                </div>
+
+                <div class="campo">
+                    <label for="carrera">Carrera</label>
+                    <input type="text" id="carrera" placeholder="Ej. Ingenieria de Sistemas" required>
+                </div>
+
+                <div class="acciones-formulario">
+                    <button type="submit">Guardar estudiante</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="tabla-contenedor" aria-label="Lista de estudiantes">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Carrera</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla"></tbody>
+            </table>
+        </section>
+    </main>
 
     <script>
         const formulario = document.getElementById("formulario");
@@ -119,12 +248,26 @@
         formulario.addEventListener("submit", async event => {
             event.preventDefault();
 
+            const campos = ["codigo", "nombre", "correo", "carrera"];
+            const campoVacio = campos.find(campo => !document.getElementById(campo).value.trim());
+
+            if (campoVacio) {
+                alert("Complete todos los campos antes de guardar.");
+                document.getElementById(campoVacio).focus();
+                return;
+            }
+
+            if (!formulario.checkValidity()) {
+                formulario.reportValidity();
+                return;
+            }
+
             const id = document.getElementById("id").value;
             const estudiante = {
-                codigo: document.getElementById("codigo").value,
-                nombre: document.getElementById("nombre").value,
-                correo: document.getElementById("correo").value,
-                carrera: document.getElementById("carrera").value
+                codigo: document.getElementById("codigo").value.trim(),
+                nombre: document.getElementById("nombre").value.trim(),
+                correo: document.getElementById("correo").value.trim(),
+                carrera: document.getElementById("carrera").value.trim()
             };
 
             const url = id ? `/estudiantes/${id}` : "/estudiantes";
