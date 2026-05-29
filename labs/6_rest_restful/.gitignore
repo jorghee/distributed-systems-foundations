@@ -1,0 +1,41 @@
+# PYTHON / FLASK
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+venv/
+.env/
+.venv/
+
+.env
+.env.*
+*.log
+*.tmp
+*.temp
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+
+# SPRING BOOT / MAVEN
+
+target/
+*.class
+*.log
+.mvn/wrapper/maven-wrapper.jar
+
+# ARCHIVOS GENERALES
+
+*.bak
+*.swp
+*~
+
+.cache/
+
+# IGNORAR SOLO ARCHIVOS GENERADOS
+
+estudiantes_flask/__pycache__/
+library_spring/target/
