@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiantes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: white;
+            padding: 18px;
+            max-width: 520px;
+            border: 1px solid #ddd;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 9px;
+            margin: 7px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 9px 13px;
+            border: 0;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #e5e7eb;
+        }
+
+        .btn-eliminar {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de estudiantes</h1>
+
+    <form id="formulario">
+        <input type="hidden" id="id">
+        <input type="text" id="codigo" placeholder="Codigo" required>
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="email" id="correo" placeholder="Correo">
+        <input type="text" id="carrera" placeholder="Carrera">
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Carrera</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla"></tbody>
+    </table>
+
+    <script>
+        const formulario = document.getElementById("formulario");
+        const tabla = document.getElementById("tabla");
+
+        async function cargarEstudiantes() {
+            const respuesta = await fetch("/estudiantes");
+            const estudiantes = await respuesta.json();
+
+            tabla.innerHTML = "";
+
+            estudiantes.forEach(estudiante => {
+                const fila = document.createElement("tr");
+
+                fila.innerHTML = `
+                    <td>${estudiante.id}</td>
+                    <td>${estudiante.codigo}</td>
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.correo}</td>
+                    <td>${estudiante.carrera}</td>
+                    <td>
+                        <button onclick='editar(${JSON.stringify(estudiante)})'>Editar</button>
+                        <button class="btn-eliminar" onclick="eliminar(${estudiante.id})">Eliminar</button>
+                    </td>
+                `;
+
+                tabla.appendChild(fila);
+            });
+        }
+
+        formulario.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const id = document.getElementById("id").value;
+            const estudiante = {
+                codigo: document.getElementById("codigo").value,
+                nombre: document.getElementById("nombre").value,
+                correo: document.getElementById("correo").value,
+                carrera: document.getElementById("carrera").value
+            };
+
+            const url = id ? `/estudiantes/${id}` : "/estudiantes";
+            const metodo = id ? "PUT" : "POST";
+
+            const respuesta = await fetch(url, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(estudiante)
+            });
+
+            if (!respuesta.ok) {
+                const error = await respuesta.json();
+                alert((error.errores || [error.error]).join("\n"));
+                return;
+            }
+
+            formulario.reset();
+            document.getElementById("id").value = "";
+            cargarEstudiantes();
+        });
+
+        function editar(estudiante) {
+            document.getElementById("id").value = estudiante.id;
+            document.getElementById("codigo").value = estudiante.codigo;
+            document.getElementById("nombre").value = estudiante.nombre;
+            document.getElementById("correo").value = estudiante.correo;
+            document.getElementById("carrera").value = estudiante.carrera;
+        }
+
+        async function eliminar(id) {
+            await fetch(`/estudiantes/${id}`, { method: "DELETE" });
+            cargarEstudiantes();
+        }
+
+        cargarEstudiantes();
+    </script>
+</body>
+</html>
