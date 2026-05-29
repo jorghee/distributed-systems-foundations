@@ -655,11 +655,11 @@
                             <div class="range-group">
                                 <div>
                                     <span class="range-label">Desde</span>
-                                    <input type="number" id="advMinAnio" placeholder="1900" min="1900" max="2100" value="1900">
+                                    <input type="number" id="advMinAnio" placeholder="1" min="1" max="2100" value="1">
                                 </div>
                                 <div>
                                     <span class="range-label">Hasta</span>
-                                    <input type="number" id="advMaxAnio" placeholder="2100" min="1900" max="2100" value="2100">
+                                    <input type="number" id="advMaxAnio" placeholder="2100" min="1" max="2100" value="2100">
                                 </div>
                             </div>
                         </div>
@@ -667,17 +667,17 @@
                             <label>Rango de Precios (S/.)</label>
                             <div class="range-slider-container">
                                 <div class="range-slider-wrapper">
-                                    <input type="range" id="advMinPrecioSlider" class="range-slider" min="0" max="1000" step="0.01" value="0">
-                                    <input type="range" id="advMaxPrecioSlider" class="range-slider" min="0" max="1000" step="0.01" value="1000">
+                                    <input type="range" id="advMinPrecioSlider" class="range-slider" min="0.01" max="1000" step="0.01" value="0.01">
+                                    <input type="range" id="advMaxPrecioSlider" class="range-slider" min="0.01" max="1000" step="0.01" value="1000">
                                 </div>
                                 <div class="range-inputs">
                                     <div class="range-input-group">
                                         <small>Mínimo</small>
-                                        <input type="number" id="advMinPrecio" placeholder="0" step="0.01" min="0" value="0">
+                                        <input type="number" id="advMinPrecio" placeholder="0" step="0.01" min="0.01" value="0.01">
                                     </div>
                                     <div class="range-input-group">
                                         <small>Máximo</small>
-                                        <input type="number" id="advMaxPrecio" placeholder="1000" step="0.01" min="0" value="1000">
+                                        <input type="number" id="advMaxPrecio" placeholder="1000" step="0.01" min="0.01" value="1000">
                                     </div>
                                 </div>
                             </div>
@@ -901,16 +901,12 @@
                 if (maxAnio) params.append('maxAnio', maxAnio);
                 if (minPrecio) params.append('minPrecio', minPrecio);
                 if (maxPrecio) params.append('maxPrecio', maxPrecio);
+                params.append('soloDisponibles', soloDisponibles);
 
                 const response = await fetch(`${API_URL}/buscar/avanzada?${params.toString()}`);
                 if (!response.ok) throw new Error('Error en búsqueda avanzada');
                 
-                let libros = await response.json();
-                
-                if (soloDisponibles) {
-                    libros = libros.filter(libro => libro.cantidad > 0);
-                }
-                
+                const libros = await response.json();
                 mostrarLibros(libros);
                 mostrarAlerta(`Se encontraron ${libros.length} resultado(s)`, 'success');
             } catch (error) {
