@@ -96,7 +96,8 @@ public class LibroController {
             @RequestParam(required = false) Integer minAnio,
             @RequestParam(required = false) Integer maxAnio,
             @RequestParam(required = false) Double minPrecio,
-            @RequestParam(required = false) Double maxPrecio) {
-        return ResponseEntity.ok(libroService.busquedaAvanzada(titulo, autor, isbn, minAnio, maxAnio, minPrecio, maxPrecio));
+            @RequestParam(required = false) Double maxPrecio,
+            @RequestParam(required = false) Boolean soloDisponibles) {
+        return ResponseEntity.ok(libroService.busquedaAvanzada(titulo, autor, isbn, minAnio, maxAnio, minPrecio, maxPrecio, soloDisponibles));
     }
 }

@@ -84,7 +84,7 @@ public class LibroService {
 
     public List<Libro> busquedaAvanzada(String titulo, String autor, String isbn, 
                                          Integer minAnio, Integer maxAnio, 
-                                         Double minPrecio, Double maxPrecio) {
+                                         Double minPrecio, Double maxPrecio, Boolean soloDisponibles) {
         List<Libro> resultados = libroRepository.findAll();
         
         if (titulo != null && !titulo.isEmpty()) {
@@ -105,6 +105,14 @@ public class LibroService {
         
         if (minPrecio != null && maxPrecio != null) {
             resultados.retainAll(libroRepository.findByPrecioBetween(minPrecio, maxPrecio));
+        }
+        
+        if (soloDisponibles != null && soloDisponibles) {
+            resultados.retainAll(libroRepository.findByCantidadGreaterThan(0));
+        }
+
+        if (soloDisponibles != null && soloDisponibles == false) {
+            resultados.retainAll(libroRepository.findUnavailableBooks());
         }
         
         return resultados;
