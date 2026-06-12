@@ -1,5 +1,8 @@
 import psycopg2
 
+conn_arequipa = None
+conn_lima = None
+
 try:
     conn_arequipa = psycopg2.connect(
         host="localhost",
@@ -21,17 +24,20 @@ try:
     cur_a = conn_arequipa.cursor()
     cur_l = conn_lima.cursor()
 
+    print("\n=== STOCK INICIAL ===")
+
+    cur_a.execute("SELECT stock FROM inventario WHERE producto='Paracetamol'")
+    stock_a = cur_a.fetchone()[0]
+
+    cur_l.execute("SELECT stock FROM inventario WHERE producto='Paracetamol'")
+    stock_l = cur_l.fetchone()[0]
+
+    print(f"Arequipa: {stock_a}")
+    print(f"Lima: {stock_l}")
+
     cantidad = 20
 
-    cur_a.execute("""
-        SELECT stock
-        FROM inventario
-        WHERE producto='Paracetamol'
-    """)
-
-    stock_actual = cur_a.fetchone()[0]
-
-    if stock_actual < cantidad:
+    if stock_a < cantidad:
         raise Exception("Stock insuficiente en Arequipa")
 
     cur_a.execute("""
@@ -49,19 +55,33 @@ try:
     conn_arequipa.commit()
     conn_lima.commit()
 
-    print("Transferencia realizada correctamente")
+    print("\nTransferencia realizada correctamente")
+
+    print("\n=== STOCK FINAL ===")
+
+    cur_a.execute("SELECT stock FROM inventario WHERE producto='Paracetamol'")
+    stock_a = cur_a.fetchone()[0]
+
+    cur_l.execute("SELECT stock FROM inventario WHERE producto='Paracetamol'")
+    stock_l = cur_l.fetchone()[0]
+
+    print(f"Arequipa: {stock_a}")
+    print(f"Lima: {stock_l}")
 
 except Exception as e:
 
-    conn_arequipa.rollback()
-    conn_lima.rollback()
+    if conn_arequipa:
+        conn_arequipa.rollback()
+
+    if conn_lima:
+        conn_lima.rollback()
 
     print("Error:", e)
 
 finally:
 
-    cur_a.close()
-    cur_l.close()
+    if conn_arequipa:
+        conn_arequipa.close()
 
-    conn_arequipa.close()
-    conn_lima.close()
+    if conn_lima:
+        conn_lima.close()
