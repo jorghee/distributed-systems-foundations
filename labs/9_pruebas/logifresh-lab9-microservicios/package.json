@@ -1,0 +1,16 @@
+{
+  "name": "logifresh-lab9-microservicios",
+  "version": "1.0.0",
+  "description": "Prototipo de LogiFresh S.A. con microservicios Express para pruebas funcionales, integracion y rendimiento.",
+  "main": "pedidos-service/server.js",
+  "scripts": {
+    "start:pedidos": "node pedidos-service/server.js",
+    "start:inventario": "node inventario-service/server.js",
+    "start:facturacion": "node facturacion-service/server.js",
+    "start:transporte": "node transporte-service/server.js",
+    "start:notificaciones": "node notificaciones-service/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

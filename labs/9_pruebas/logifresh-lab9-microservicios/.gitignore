@@ -1,0 +1,14 @@
+# Crear .gitignore
+echo "node_modules/" >> .gitignore
+
+# Si ya agregaste todo con git add .
+git rm -r --cached node_modules
+
+# Agregar cambios nuevamente
+git add .gitignore
+git add .
+
+# Hacer el commit con la fecha deseada
+GIT_AUTHOR_DATE="2026-06-19 06:32:00" \
+GIT_COMMITTER_DATE="2026-06-19 06:32:00" \
+git commit -m "Lab 9 implementacion"

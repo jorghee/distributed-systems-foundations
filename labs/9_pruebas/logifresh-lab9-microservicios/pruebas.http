@@ -1,0 +1,154 @@
+@baseUrl = http://localhost:3001
+
+### Health del servicio orquestador de pedidos
+GET {{baseUrl}}/health
+
+### 1. CP-01 Registro correcto de pedido
+# Resultado esperado: pedidos llama a inventario, facturacion, transporte y notificaciones.
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Sur",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": 10
+}
+
+### 2. CP-02 Pedido con inventario insuficiente
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Norte",
+  "tipoCliente": "Normal",
+  "productoId": "P002",
+  "cantidad": 100
+}
+
+### 3. CP-03 Pedido con cantidad cero
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Centro",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": 0
+}
+
+### 4. CP-04 Pedido con cantidad negativa
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Centro",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": -5
+}
+
+### 5. CP-05 Descuento por volumen
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Este",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": 60
+}
+
+### 6. CP-06 Descuento VIP y volumen
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Sur",
+  "tipoCliente": "VIP",
+  "productoId": "P001",
+  "cantidad": 60
+}
+
+### 7. CP-07 Generacion automatica de factura
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Factura",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": 5
+}
+
+### 8. CP-08 Reintento de factura duplicada
+POST {{baseUrl}}/facturas/reintento
+Content-Type: application/json
+
+{
+  "idPedido": 1
+}
+
+### 9. CP-09 Cancelacion de pedido
+POST {{baseUrl}}/pedidos/1/cancelar
+
+### 10. CP-10 Envio de notificacion
+GET {{baseUrl}}/notificaciones
+
+### 11. Ver productos en inventario-service mediante pedidos-service
+GET {{baseUrl}}/productos
+
+### 12. Ver metricas agregadas desde varios microservicios
+GET {{baseUrl}}/metricas
+
+### 13. Prueba de integracion general
+POST {{baseUrl}}/integracion/test
+Content-Type: application/json
+
+{}
+
+### 14. Prueba de integracion con falla de transporte
+POST {{baseUrl}}/integracion/test
+Content-Type: application/json
+
+{
+  "simularFallaTransporte": true
+}
+
+### 15. Prueba de integracion con falla de notificaciones
+POST {{baseUrl}}/integracion/test
+Content-Type: application/json
+
+{
+  "simularFallaNotificacion": true
+}
+
+### Consultar facturas en facturacion-service mediante pedidos-service
+GET {{baseUrl}}/facturas
+
+### Consultar transportes en transporte-service mediante pedidos-service
+GET {{baseUrl}}/transportes
+
+### Falla simulada de transporte en pedido normal
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Transporte",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": 1,
+  "simularFallaTransporte": true
+}
+
+### Falla simulada de notificacion en pedido normal
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "Supermercado Notificacion",
+  "tipoCliente": "Normal",
+  "productoId": "P001",
+  "cantidad": 1,
+  "simularFallaNotificacion": true
+}
