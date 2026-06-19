@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-06-19T13:09:15.920Z",
+  "configuracion": {
+    "herramienta": "k6 v0.56.0",
+    "vus": 100,
+    "duracion": "5 minutos",
+    "escenarios": {
+      "crear_pedidos": {
+        "vus": 80,
+        "executor": "constant-vus"
+      },
+      "consultas": {
+        "vus": 20,
+        "executor": "constant-vus"
+      }
+    }
+  },
+  "metricas_generales": {
+    "total_requests": 71162,
+    "requests_por_segundo": 237.21,
+    "tiempo_promedio_ms": 32.58,
+    "tiempo_minimo_ms": 0.09,
+    "mediana_ms": 11.22,
+    "tiempo_maximo_ms": 554.48,
+    "p90_ms": 87.55,
+    "p95_ms": 139.89,
+    "tasa_errores_porcentaje": 0,
+    "errores_totales": 0,
+    "checks_exitosos_porcentaje": 100
+  },
+  "metricas_post_pedidos": {
+    "promedio_ms": 33.43,
+    "maximo_ms": 554.48,
+    "p90_ms": 89.91,
+    "p95_ms": 146.31
+  },
+  "metricas_get_health": {
+    "promedio_ms": 12.45,
+    "maximo_ms": 254.39,
+    "p95_ms": 67.01
+  },
+  "metricas_get_productos": {
+    "promedio_ms": 18.05,
+    "maximo_ms": 343.05,
+    "p95_ms": 91.87
+  },
+  "metricas_get_pedidos": {
+    "promedio_ms": 48.78,
+    "maximo_ms": 321.62,
+    "p95_ms": 131.4
+  },
+  "thresholds": {
+    "groups": [],
+    "checks": [
+        {
+          "name": "GET /health - status 200",
+          "path": "::GET /health - status 200",
+          "id": "107676128816a22c8c8b414c3412ce69",
+          "passes": 2886,
+          "fails": 0
+        },
+        {
+          "passes": 62504,
+          "fails": 0,
+          "name": "POST /pedidos - status 200 o 201",
+          "path": "::POST /pedidos - status 200 o 201",
+          "id": "3d2f31a3a2b99712c5922f17a4d3b32c"
+        },
+        {
+          "fails": 0,
+          "name": "POST /pedidos - tiempo < 8000ms",
+          "path": "::POST /pedidos - tiempo < 8000ms",
+          "id": "4d6d8a6ba42bc1541a0382654ef98010",
+          "passes": 62504
+        },
+        {
+          "name": "POST /pedidos - respuesta contiene pedido",
+          "path": "::POST /pedidos - respuesta contiene pedido",
+          "id": "999dc1288f1fd1ed43e9ea44e027d0c2",
+          "passes": 62504,
+          "fails": 0
+        },
+        {
+          "name": "GET /productos - status 200",
+          "path": "::GET /productos - status 200",
+          "id": "e55bfc0e9f63c4379d48a3ae1014729d",
+          "passes": 2886,
+          "fails": 0
+        },
+        {
+          "id": "38ee3854ee7f838d7f881453e9bf209e",
+          "passes": 2886,
+          "fails": 0,
+          "name": "GET /pedidos - status 200",
+          "path": "::GET /pedidos - status 200"
+        }
+      ],
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e"
+  }
+}
