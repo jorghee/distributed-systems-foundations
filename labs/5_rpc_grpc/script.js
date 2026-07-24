@@ -76,42 +76,55 @@ export async function test_json_rpc() {
   // Serializamos a string y añadimos el salto de línea obligatorio para el servidor
   const jsonPayload = JSON.stringify(request) + "\n";
 
-  // Conectar, enviar datos y esperar respuesta
+  // Conectar y procesar múltiples peticiones en la misma conexión para alta carga
   try {
     await socket.connect(8080, "localhost");
-    await socket.write(jsonPayload);
-
-    await new Promise((resolve, reject) => {
-      socket.on("data", (data) => {
-        const stringData = String.fromCharCode.apply(null, new Uint8Array(data));
-        receivedData += stringData;
-        
-        if (stringData.includes('\n')) {
-          try {
-            const responseJson = JSON.parse(receivedData.trim());
-            check(responseJson, {
-              'JSON-RPC no error': (res) => !res.error,
-              'JSON-RPC result correct': (res) => res.result === 20.0
-            });
-          } catch (e) {
-            fail('Fallo al parsear JSON-RPC: ' + e.message);
-          }
-          if (socket && typeof socket.close === 'function') {
+    
+    // Enviar múltiples peticiones en la misma iteración para sortear el bloqueo de K6
+    for (let i = 0; i < 100; i++) {
+      await socket.write(jsonPayload);
+      
+      await new Promise((resolve, reject) => {
+        let isResolved = false;
+        socket.on("data", (data) => {
+          if (isResolved) return;
+          const stringData = String.fromCharCode.apply(null, new Uint8Array(data));
+          receivedData += stringData;
+          
+          if (stringData.includes('\n')) {
+            isResolved = true;
             try {
-              socket.close();
-            } catch(err) {
-              // Ignora errores si el canal nativo ya se cerró
+              const responseJson = JSON.parse(receivedData.trim());
+              check(responseJson, {
+                'JSON-RPC no error': (res) => !res.error,
+                'JSON-RPC result correct': (res) => res.result === 20.0
+              });
+            } catch (e) {
+              fail('Fallo al parsear JSON-RPC: ' + e.message);
             }
+            receivedData = ""; // Reset buffer para la siguiente lectura
+            resolve();
           }
-          resolve();
-        }
-      });
+        });
 
-      socket.on("error", (err) => {
-        fail('TCP Socket Error: ' + err.message);
-        reject(err);
+        socket.on("error", (err) => {
+          if (isResolved) return;
+          isResolved = true;
+          fail('TCP Socket Error: ' + err.message);
+          reject(err);
+        });
       });
-    });
+    }
+
+    if (socket && typeof socket.destroy === 'function') {
+      try {
+        socket.destroy();
+      } catch (err) {}
+    } else if (socket && typeof socket.close === 'function') {
+      try {
+        socket.close();
+      } catch (err) {}
+    }
   } catch (e) {
     fail('Error al conectar o escribir: ' + e.message);
   }
