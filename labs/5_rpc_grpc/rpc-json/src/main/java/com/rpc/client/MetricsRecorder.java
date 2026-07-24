@@ -44,6 +44,7 @@ public class MetricsRecorder {
       server.createContext("/metrics", exchange -> {
         String response = prometheusRegistry.scrape();
         byte[] bytes = response.getBytes();
+        exchange.getResponseHeaders().set("Content-Type", "text/plain; version=0.0.4; charset=utf-8");
         exchange.sendResponseHeaders(200, bytes.length);
         try (OutputStream os = exchange.getResponseBody()) {
           os.write(bytes);

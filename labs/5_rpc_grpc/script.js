@@ -49,10 +49,10 @@ export function test_grpc() {
     value: 25.0,
   };
 
-  const response = grpcClient.invoke('converter.Converter/Convert', payload);
+  const response = grpcClient.invoke('Converter/Convert', payload);
 
   check(response, {
-    'gRPC status is OK': (r) => r && r.status === grpc.status_ok,
+    'gRPC status is OK': (r) => r && r.status === grpc.StatusOK,
     'gRPC message exists': (r) => r && r.message,
   });
 
@@ -93,7 +93,13 @@ export async function test_json_rpc() {
       } catch (e) {
         fail('Fallo al parsear JSON-RPC: ' + e.message);
       }
-      socket.close();
+      if (socket && typeof socket.close === 'function') {
+        try {
+          socket.close();
+        } catch(err) {
+          // Ignora errores si el canal nativo ya se cerró
+        }
+      }
     }
   });
 

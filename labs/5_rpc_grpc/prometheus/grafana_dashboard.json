@@ -107,7 +107,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (protocol) (rate(rpc_requests_total[5s]))",
+          "expr": "sum by (protocol) (rate(rpc_requests_total[15s]))",
           "legendFormat": "{{protocol}}",
           "range": true,
           "refId": "A"
@@ -202,7 +202,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "(sum by (protocol) (rate(rpc_requests_latency_seconds_sum[5s])) / sum by (protocol) (rate(rpc_requests_latency_seconds_count[5s]))) * 1000",
+          "expr": "(sum by (protocol) (rate(rpc_requests_latency_seconds_sum[15s])) / sum by (protocol) (rate(rpc_requests_latency_seconds_count[15s]))) * 1000",
           "legendFormat": "{{protocol}}",
           "range": true,
           "refId": "A"
