@@ -6,6 +6,7 @@ public class ConverterServiceImpl extends ConverterGrpc.ConverterImplBase {
 
   @Override
   public void convert(ConvertRequest req, StreamObserver<ConvertResponse> responseObserver) {
+    long startTime = System.nanoTime();
     double value = req.getValue();
     String type = req.getType();
     double result = 0;
@@ -65,5 +66,12 @@ public class ConverterServiceImpl extends ConverterGrpc.ConverterImplBase {
 
     responseObserver.onNext(response);
     responseObserver.onCompleted();
+
+    String status = "success";
+    if ("Conversión inválida".equals(message) || "Valor inválido".equals(message)) {
+      status = "error";
+    }
+    long elapsed = System.nanoTime() - startTime;
+    MetricsRecorder.recordRequest("grpc", type, status, elapsed);
   }
 }

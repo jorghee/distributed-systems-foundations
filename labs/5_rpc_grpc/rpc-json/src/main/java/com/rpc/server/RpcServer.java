@@ -1,5 +1,7 @@
 package com.rpc.server;
 
+import com.rpc.client.MetricsRecorder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rpc.dispatcher.RpcDispatcher;
 import com.rpc.model.RpcRequest;
@@ -21,6 +23,7 @@ public class RpcServer {
   private static final RpcDispatcher dispatcher = new RpcDispatcher(new CalculatorService());
 
   public static void main(String[] args) {
+    MetricsRecorder.init(8082);
     System.out.println("Comenzando el servidor RPC en el puerto " + PORT + "...");
 
     try (ServerSocket serverSocket = new ServerSocket(PORT)) {

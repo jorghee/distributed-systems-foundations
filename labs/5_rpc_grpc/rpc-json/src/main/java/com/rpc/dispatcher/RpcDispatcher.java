@@ -1,5 +1,6 @@
 package com.rpc.dispatcher;
 
+import com.rpc.client.MetricsRecorder;
 import com.rpc.model.RpcError;
 import com.rpc.model.RpcRequest;
 import com.rpc.model.RpcResponse;
@@ -17,11 +18,14 @@ public class RpcDispatcher {
   public RpcResponse dispatch(RpcRequest request) {
     String methodName = request.getMethod();
     List<Double> params = request.getParams();
+    long startTime = System.nanoTime();
+    String status = "success";
 
     try {
       Method method = findMethod(methodName, params.size());
 
       if (method == null) {
+        status = "error";
         return RpcResponse.error(RpcError.METHOD_NOT_FOUND, request.getId());
       }
 
@@ -33,11 +37,16 @@ public class RpcDispatcher {
       return RpcResponse.success(result, request.getId());
 
     } catch (InvocationTargetException e) {
+      status = "error";
       // El método de negocio lanzó una excepción
       RpcError customError = new RpcError(-32000, e.getTargetException().getMessage());
       return RpcResponse.error(customError, request.getId());
     } catch (Exception e) {
+      status = "error";
       return RpcResponse.error(RpcError.INTERNAL_ERROR, request.getId());
+    } finally {
+      long duration = System.nanoTime() - startTime;
+      MetricsRecorder.recordRequest("json-rpc", methodName, status, duration);
     }
   }
 
