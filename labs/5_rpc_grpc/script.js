@@ -76,41 +76,42 @@ export async function test_json_rpc() {
   // Serializamos a string y añadimos el salto de línea obligatorio para el servidor
   const jsonPayload = JSON.stringify(request) + "\n";
 
-  // Manejador de respuesta
-  socket.on("data", (data) => {
-    // La data recibida viene en bytes, la convertimos a string
-    const stringData = String.fromCharCode.apply(null, new Uint8Array(data));
-    receivedData += stringData;
-    
-    // Si la respuesta incluye un salto de línea (fin del request)
-    if (stringData.includes('\n')) {
-      try {
-        const responseJson = JSON.parse(receivedData.trim());
-        check(responseJson, {
-          'JSON-RPC no error': (res) => !res.error,
-          'JSON-RPC result correct': (res) => res.result === 20.0
-        });
-      } catch (e) {
-        fail('Fallo al parsear JSON-RPC: ' + e.message);
-      }
-      if (socket && typeof socket.close === 'function') {
-        try {
-          socket.close();
-        } catch(err) {
-          // Ignora errores si el canal nativo ya se cerró
-        }
-      }
-    }
-  });
-
-  socket.on("error", (err) => {
-    fail('TCP Socket Error: ' + err.message);
-  });
-
-  // Conectar y enviar datos
+  // Conectar, enviar datos y esperar respuesta
   try {
     await socket.connect(8080, "localhost");
     await socket.write(jsonPayload);
+
+    await new Promise((resolve, reject) => {
+      socket.on("data", (data) => {
+        const stringData = String.fromCharCode.apply(null, new Uint8Array(data));
+        receivedData += stringData;
+        
+        if (stringData.includes('\n')) {
+          try {
+            const responseJson = JSON.parse(receivedData.trim());
+            check(responseJson, {
+              'JSON-RPC no error': (res) => !res.error,
+              'JSON-RPC result correct': (res) => res.result === 20.0
+            });
+          } catch (e) {
+            fail('Fallo al parsear JSON-RPC: ' + e.message);
+          }
+          if (socket && typeof socket.close === 'function') {
+            try {
+              socket.close();
+            } catch(err) {
+              // Ignora errores si el canal nativo ya se cerró
+            }
+          }
+          resolve();
+        }
+      });
+
+      socket.on("error", (err) => {
+        fail('TCP Socket Error: ' + err.message);
+        reject(err);
+      });
+    });
   } catch (e) {
     fail('Error al conectar o escribir: ' + e.message);
   }
