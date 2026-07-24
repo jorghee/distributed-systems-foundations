@@ -66,3 +66,63 @@ Mensaje: Conversión exitosa
 **Orden obligatorio:** siempre levanta el servidor primero y espera a que imprima su mensaje de inicio antes de lanzar el cliente.
 
 **`mvn compile` solo la primera vez** (o tras cambios en el código). Para ejecuciones posteriores basta con `mvn exec:java ...`.
+
+
+## Ejecución de Pruebas y Monitoreo
+
+Para ejecutar la comparativa de carga entre gRPC y JSON-RPC y monitorizar los resultados con Prometheus y Grafana, sigue estos pasos:
+
+### Prerrequisitos
+- **Java 17+** y **Maven** instalados.
+- **K6** instalado y compilado con la extensión TCP (`k6/x/tcp`). *(En instalaciones recientes o usando `xk6`, la extensión TCP se puede proveer dinámicamente).*
+- **Docker y Docker Compose** instalados (para desplegar la pila de observabilidad).
+
+### Paso 1: Iniciar la Observabilidad
+En la raíz del proyecto se ha configurado un entorno automatizado con Docker Compose. Este entorno levanta **Prometheus** (puerto 9090) y **Grafana** (puerto 3000), con Prometheus ya configurado para ingerir métricas de ambos servidores automáticamente.
+
+Para levantar la infraestructura, ejecuta en tu terminal:
+```bash
+docker-compose up -d
+```
+*(Nota: Grafana estará disponible en `http://localhost:3000` con usuario y contraseña `admin`)*.
+
+### Paso 2: Iniciar los Servidores
+Necesitas dos terminales para levantar ambos servidores simultáneamente.
+
+**Terminal A (Servidor gRPC):**
+```bash
+cd converter
+mvn clean compile
+mvn exec:java -Dexec.mainClass="converter.ServerMain"
+```
+
+**Terminal B (Servidor JSON-RPC):**
+```bash
+cd rpc-json
+mvn clean compile
+mvn exec:java -Dexec.mainClass="com.rpc.server.RpcServer"
+```
+
+### Paso 3: Ejecutar las Pruebas
+Con ambos servidores corriendo, abre una nueva terminal y lanza el script de carga.
+
+**Carga contra gRPC:**
+```bash
+k6 run script.js -e SCENARIO=grpc_load_test
+```
+*(Nota: por defecto el script corre todos los escenarios, puedes usar el comando estándar `k6 run script.js` para correr la prueba base conjunta)*.
+
+**Carga contra JSON-RPC (TCP Puro):**
+Asegúrate de usar un binario de K6 que contenga la extensión `k6/x/tcp`:
+```bash
+./k6 run script.js -e SCENARIO=json_rpc_load_test
+```
+
+### Paso 4: Visualizar Resultados
+1. Abre tu navegador y accede a **Grafana** (`http://localhost:3000`).
+2. Configura el **Data Source** de Prometheus (apuntando a la IP de Prometheus, `http://localhost:9090`).
+3. Importa o crea un Dashboard en Grafana buscando las métricas:
+   - `rpc_requests_latency_seconds` (para ver los tiempos de respuesta y percentiles).
+   - `rpc_requests_total` (para calcular el Throughput / Peticiones por segundo).
+   - Métricas de la JVM como `jvm_memory_used_bytes` y `jvm_threads_live_threads`.
+4. Utiliza el label `protocol` (`grpc` o `json-rpc`) para sobreponer los gráficos y comparar el rendimiento directamente.
