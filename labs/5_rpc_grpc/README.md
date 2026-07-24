@@ -75,6 +75,10 @@ Para ejecutar la comparativa de carga entre gRPC y JSON-RPC y monitorizar los re
 ### Prerrequisitos
 - **Java 17+** y **Maven** instalados.
 - **K6** instalado y compilado con la extensión TCP (`k6/x/tcp`). *(En instalaciones recientes o usando `xk6`, la extensión TCP se puede proveer dinámicamente).*
+    Usa el siguiente comando para traer el archivo ejecutable K6 con la extensión disponible:
+    ```sh
+    go install go.k6.io/xk6/cmd/xk6@latest && ~/go/bin/xk6 build --with github.com/grafana/xk6-tcp@latest
+    ```
 - **Docker y Docker Compose** instalados (para desplegar la pila de observabilidad).
 
 ### Paso 1: Iniciar la Observabilidad
@@ -120,9 +124,11 @@ Asegúrate de usar un binario de K6 que contenga la extensión `k6/x/tcp`:
 
 ### Paso 4: Visualizar Resultados
 1. Abre tu navegador y accede a **Grafana** (`http://localhost:3000`).
-2. Configura el **Data Source** de Prometheus (apuntando a la IP de Prometheus, `http://localhost:9090`).
-3. Importa o crea un Dashboard en Grafana buscando las métricas:
+2. Configura el **Data Source** de Prometheus (apuntando a la IP de Prometheus, `http://localhost:9090` o `http://prometheus:9090` si estás en linux).
+3. Importa el Dashboard en Grafana ubicado en [`./prometheus/grafana_dashboard.json`](./prometheus/grafana_dashboard.json). Este dashboard muestra:
    - `rpc_requests_latency_seconds` (para ver los tiempos de respuesta y percentiles).
    - `rpc_requests_total` (para calcular el Throughput / Peticiones por segundo).
    - Métricas de la JVM como `jvm_memory_used_bytes` y `jvm_threads_live_threads`.
-4. Utiliza el label `protocol` (`grpc` o `json-rpc`) para sobreponer los gráficos y comparar el rendimiento directamente.
+
+> [!IMPORTANT]
+> Las métricas solo estarán disponibles una vez ejecutadas la pruebas de rendimiento con k6
